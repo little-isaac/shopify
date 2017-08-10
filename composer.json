@@ -10,7 +10,6 @@
         }
     ],
     "minimum-stability": "stable",
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Shopify\\": "src/"
