@@ -1,0 +1,16 @@
+{
+    "name": "milind/objects",
+    "description": "Shopify objects to communicate with API",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "milind",
+            "email": "milind@Milind-pc.mshome.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        
+    }
+}
