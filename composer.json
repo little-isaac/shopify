@@ -9,12 +9,9 @@
             "email": "milind@Milind-pc.mshome.net"
         }
     ],
-    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "Shopify\\": "src/"
         }
-    },
-    "require": {
     }
 }
