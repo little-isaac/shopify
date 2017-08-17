@@ -15,7 +15,7 @@ class ShopifyObject {
     private $token;
     private $api_key;
     private $secret;
-    protected $data;
+    public $data;
 
     function __construct($shop_name, $token, $data = null) {
         $this->shop_name = $shop_name;
