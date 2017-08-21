@@ -16,6 +16,18 @@ class Asset extends ShopifyObject {
     protected $COUNT = "admin/assets/count.json"; // url for count
     protected $ARRAY_NAME = "asset";              // array name in update/create
     protected $is_having_primary_key = false;     // get is primary key in object or not
-   
-    
+
+    public static function belongsTo($shop_name, $token, $theme_id = null) {
+        $asset = new Asset($shop_name, $token);
+        if ($theme_id == null) {
+            
+        } else {
+            $asset->SINGLE = "admin/themes/$theme_id/assets.json";
+            $asset->UPDATE = "admin/themes/$theme_id/assets.json";
+            $asset->ALL = "admin/themes/$theme_id/assets.json";
+            $asset->COUNT = "admin/themes/$theme_id/assets.json";
+        }
+        return $asset;
+    }
+
 }
