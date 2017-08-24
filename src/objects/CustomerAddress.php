@@ -17,8 +17,8 @@ class CustomerAddress extends ShopifyObject {
     protected $ARRAY_NAME = "address";              // array name in update/create
     protected $is_having_primary_key = true;        // get is primary key in object or not
 
-    public static function belongsTo($shop_name, $token, $customer_id = null) {
-        $customer_address = new CustomerAddress($shop_name, $token);
+    public static function belongsTo($shop_name, $token, $customer_id = null, $data=null) {
+        $customer_address = new CustomerAddress($shop_name, $token, $data);
         if ($customer_id == null) {
             
         } else {
