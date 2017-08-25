@@ -16,7 +16,8 @@ class ShopifyObject {
     private $api_key;
     private $secret;
     public $data;
-
+    private $error;
+    
     function __construct($shop_name, $token, $data = null) {
         $this->shop_name = $shop_name;
         $this->token = $token;
@@ -41,6 +42,7 @@ class ShopifyObject {
             $class = get_class($this);
             return (new $class($this->shop_name, $this->token, $this->call('GET', str_replace("{id}", $id, $this->SINGLE), $data)));
         } catch (ShopifyApiException $ex) {
+           $this->error = $ex->getMessage();
             return null;
         }
         return null;
@@ -63,6 +65,7 @@ class ShopifyObject {
             }
             return $result;
         } catch (ShopifyApiException $ex) {
+           $this->error = $ex->getMessage();
             return null;
         }
         return null;
@@ -77,6 +80,7 @@ class ShopifyObject {
             $this->data = $result;
             return $this;
         } catch (ShopifyApiException $ex) {
+            $this->error = $ex->getMessage();
             return null;
         }
         return null;
@@ -92,7 +96,7 @@ class ShopifyObject {
             $count = $this->call('GET', $this->COUNT, $data);
             return $count;
         } catch (ShopifyApiException $ex) {
-            throw new \Exception($ex->getMessage());
+            $this->error = $ex->getMessage();
             return null;
         }
         return null;
@@ -104,6 +108,7 @@ class ShopifyObject {
             $this->data = null;
             return $this;
         } catch (ShopifyApiException $ex) {
+            $this->error = $ex->getMessage();
             return null;
         }
         return null;
@@ -119,6 +124,7 @@ class ShopifyObject {
             $this->data = $result;
             return $this;
         } catch (ShopifyApiException $ex) {
+            $this->error = $ex->getMessage();
             return null;
         }
         return null;
@@ -134,6 +140,7 @@ class ShopifyObject {
             $this->data = $result;
             return $this;
         } catch (ShopifyApiException $ex) {
+            $this->error = $ex->getMessage();
             return null;
         }
         return null;
