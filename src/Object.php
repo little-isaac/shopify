@@ -17,7 +17,7 @@ class ShopifyObject {
     private $secret;
     public $data;
     private $error;
-    
+
     function __construct($shop_name, $token, $data = null) {
         $this->shop_name = $shop_name;
         $this->token = $token;
@@ -42,7 +42,7 @@ class ShopifyObject {
             $class = get_class($this);
             return (new $class($this->shop_name, $this->token, $this->call('GET', str_replace("{id}", $id, $this->SINGLE), $data)));
         } catch (ShopifyApiException $ex) {
-           $this->error = $ex->getMessage();
+            $this->error = $ex->getMessage();
             return null;
         }
         return null;
@@ -65,7 +65,7 @@ class ShopifyObject {
             }
             return $result;
         } catch (ShopifyApiException $ex) {
-           $this->error = $ex->getMessage();
+            $this->error = $ex->getMessage();
             return null;
         }
         return null;
@@ -161,6 +161,14 @@ class ShopifyObject {
             return $this->$field = $value;
         }
         $this->data[$field] = $value;
+    }
+
+    public function __isset($prop) {
+        if (property_exists($this, $prop)) {
+            return true;
+        } if (isset($this->data[$prop])) {
+            return true;
+        } return false;
     }
 
     public function __toString() {

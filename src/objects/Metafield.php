@@ -17,8 +17,8 @@ class Metafield extends ShopifyObject {
     protected $ARRAY_NAME = "metafield";              // array name in update/create
     protected $is_having_primary_key = true;        // get is primary key in object or not
 
-    public static function belongsTo($shop_name, $token, $name = null, $id = null) {
-        $metafield = new Metafield($shop_name, $token);
+    public static function belongsTo($shop_name, $token, $name = null, $id = null,$data = null) {
+        $metafield = new Metafield($shop_name, $token,$data);
         if ($name == null) {
             $metafield->SINGLE = "admin/metafields/{id}.json";
             $metafield->ALL = "admin/metafields.json";
