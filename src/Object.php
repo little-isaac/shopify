@@ -40,7 +40,9 @@ class ShopifyObject {
                 $data = array_merge($data, $str);
             }
             $class = get_class($this);
-            return (new $class($this->shop_name, $this->token, $this->call('GET', str_replace("{id}", $id, $this->SINGLE), $data)));
+            $res =  $this->call('GET', str_replace("{id}", $id, $this->SINGLE), $data);
+            $this->data = $res;
+            return $this;
         } catch (ShopifyApiException $ex) {
             $this->error = $ex->getMessage();
             return null;
