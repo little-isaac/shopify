@@ -12,5 +12,7 @@ return [
     */
 
     'key' => env("SHOPIFY_KEY", null),
-    'secret' => env("SHOPIFY_SECRET", null)
+    'secret' => env("SHOPIFY_SECRET", null),
+    'return_url' => env("SHOPIFY_RETURN_URL", null),
+    'callback_url' => env("SHOPIFY_CALLBACK_URL", null),
 ];
