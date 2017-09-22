@@ -7,6 +7,6 @@
  */
 namespace Shopify;
 
-class ShopifyCurlException extends Exception {
+class ShopifyCurlException extends \Exception {
     
 }
