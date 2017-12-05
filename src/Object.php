@@ -262,5 +262,12 @@ class ShopifyObject {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         }
     }
+    
+    public function toArray(){
+        return json_decode($this->data,true);
+    }
 
+    public function toJson(){
+        return json_encode($this->data);
+    }
 }
