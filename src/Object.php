@@ -147,6 +147,20 @@ class ShopifyObject {
         }
         return null;
     }
+    function account_activation_url() {
+        try {
+            $data = [];
+//            $data = [
+//                $this->ARRAY_NAME => $this->data
+//            ];
+            $result = $this->call('POST', str_replace('{id}', $this->id, $this->ACCOUNT_ACTIVATION_URL), $data);
+            return $result;
+        } catch (ShopifyApiException $ex) {
+            $this->error = $ex->getMessage();
+            return null;
+        }
+        return null;
+    }
 
     public function __get($field) {
         if (property_exists($this, $field)) {
