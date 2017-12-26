@@ -277,11 +277,20 @@ class ShopifyObject {
         }
     }
     
-    public function toArray(){
-        return json_decode($this->data,true);
+    public function toArray($key=null){
+        if(!empty($key)){
+            return json_decode($this->toJson($key),true);
+        }
+        return json_decode($this->toJson(),true);
     }
 
-    public function toJson(){
+    public function toJson($key=null){
+        if(!empty($key)){
+            if(gettype($this->$key) === "string"){
+                return $this->$key;
+            }
+            return json_encode($this->$key);
+        }
         return json_encode($this->data);
     }
 }
