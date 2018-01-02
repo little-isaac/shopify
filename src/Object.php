@@ -191,7 +191,7 @@ class ShopifyObject {
         return json_encode($this->data);
     }
 
-    private function call($method, $path, $params = array()) {
+    public function call($method, $path, $params = array()) {
         $baseurl = "https://{$this->shop_name}/";
 
         $url = $baseurl . ltrim($path, '/');
