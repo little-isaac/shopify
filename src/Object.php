@@ -162,6 +162,22 @@ class ShopifyObject {
         return null;
     }
 
+    function calculate() {
+        try {
+            $data = [];
+            $data = [
+                $this->ARRAY_NAME => $this->data
+            ];
+            $result = $this->call('POST', str_replace('{id}', $this->id, $this->CALCULATE), $data);
+            $this->data = $result;
+            return $this;
+        } catch (ShopifyApiException $ex) {
+            $this->error = $ex->getMessage();
+            return null;
+        }
+        return null;
+    }
+    
     public function __get($field) {
         if (property_exists($this, $field)) {
             return $this->$field;
@@ -206,8 +222,19 @@ class ShopifyObject {
         $response = $this->curlHttpApiRequest($method, $url, $query, $payload, $request_headers);
 
         $response = json_decode($response, true);
+        if(isset($this->last_response_headers['x-shopify-shop-api-call-limit']) && !empty($this->last_response_headers['x-shopify-shop-api-call-limit'])){
+            $calls = intVal(trim(str_replace("/40", "", $this->last_response_headers['x-shopify-shop-api-call-limit'])));
+            if($calls >= 38){
+                sleep(10);
+            }
+        }
         if (isset($response['errors']) or ( $this->last_response_headers['http_status_code'] >= 400)) {
 //            echo "\n\n";
+            if($this->last_response_headers['http_status_code'] == 429){
+//                dd($this->last_response_headers);
+                sleep(10);
+                $this->call($method, $path, $params);
+            }
             throw new ShopifyApiException($method, $path, $params, $this->last_response_headers, $response);
         }
         return (is_array($response) and ( count($response) > 0)) ? array_shift($response) : $response;

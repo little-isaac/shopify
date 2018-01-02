@@ -28,23 +28,8 @@ class Refund extends ShopifyObject {
             $refund->UPDATE = "admin/orders/$order_id/refunds/{id}.json";
             $refund->ALL = "admin/orders/$order_id/refunds.json";
             $refund->COUNT = "admin/orders/$order_id/refunds/count.json";
+            $refund->CALCULATE = "admin/orders/$order_id/refunds/calculate.json";
         }
         return $refund;
-    }
-    
-    function calculate() {
-        try {
-            $data = [];
-            $data = [
-                $this->ARRAY_NAME => $this->data
-            ];
-            $result = $this->call('POST', str_replace('{id}', $this->id, $this->CALCULATE), $data);
-            $this->data = $result;
-            return $this;
-        } catch (ShopifyApiException $ex) {
-            $this->error = $ex->getMessage();
-            return null;
-        }
-        return null;
     }
 }
