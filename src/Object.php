@@ -233,7 +233,7 @@ class ShopifyObject {
             if($this->last_response_headers['http_status_code'] == 429){
 //                dd($this->last_response_headers);
                 sleep(10);
-                $this->call($method, $path, $params);
+               return $this->call($method, $path, $params);
             }
             throw new ShopifyApiException($method, $path, $params, $this->last_response_headers, $response);
         }
