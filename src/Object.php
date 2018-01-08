@@ -225,7 +225,7 @@ class ShopifyObject {
         $response = json_decode($response, true);
         if(isset($this->last_response_headers['x-shopify-shop-api-call-limit']) && !empty($this->last_response_headers['x-shopify-shop-api-call-limit'])){
             $calls = intVal(trim(str_replace("/40", "", $this->last_response_headers['x-shopify-shop-api-call-limit'])));
-            if($calls >= 38){
+            if($calls >= 35){
                 sleep(10);
             }
         }
