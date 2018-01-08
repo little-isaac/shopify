@@ -147,6 +147,7 @@ class ShopifyObject {
         }
         return null;
     }
+    
     function account_activation_url() {
         try {
             $data = [];

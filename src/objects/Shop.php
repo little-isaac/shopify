@@ -15,4 +15,19 @@ class Shop extends ShopifyObject {
     protected $is_having_primary_key = false; 
     protected $SINGLE = "admin/shop.json";
 
+    
+    public function redirect($API, $SCOPES, $REDIRECT_URI){
+        $url = "https://".$this->shop_name."/admin/oauth/authorize?client_id=".$API."&scope=".$SCOPES."&redirect_uri=".$REDIRECT_URI;
+        return redirect($url);
+    }
+    
+    public function get_access_token($API_KEY,$SCERET_KEY,$CODE){
+        $path = "/admin/oauth/access_token";
+        $params = [
+            "client_id"=>$API_KEY,
+            "client_secret" => $SCERET_KEY,
+            "code" => $CODE
+        ];
+        return $this->call("POST", $path,$params);
+    }
 }
