@@ -17,7 +17,11 @@ class ShopifyObject {
     private $secret;
     public $data;
     private $error;
-
+    private $call_limit = 41;
+    private $last_call_limit = 30;
+    private $sleep_on_limit = 10; // in sec
+    
+    
     function __construct($shop_name, $token, $data = null) {
         $this->shop_name = $shop_name;
         $this->token = $token;
@@ -225,15 +229,15 @@ class ShopifyObject {
         $response = json_decode($response, true);
         if(isset($this->last_response_headers['x-shopify-shop-api-call-limit']) && !empty($this->last_response_headers['x-shopify-shop-api-call-limit'])){
             $calls = intVal(trim(str_replace("/40", "", $this->last_response_headers['x-shopify-shop-api-call-limit'])));
-            if($calls >= 35){
-                sleep(10);
+            if($calls >= $this->last_call_limit){
+                sleep($this->sleep_on_limit);
             }
         }
         if (isset($response['errors']) or ( $this->last_response_headers['http_status_code'] >= 400)) {
 //            echo "\n\n";
             if($this->last_response_headers['http_status_code'] == 429){
 //                dd($this->last_response_headers);
-                sleep(10);
+                sleep($this->sleep_on_limit);
                return $this->call($method, $path, $params);
             }
             throw new ShopifyApiException($method, $path, $params, $this->last_response_headers, $response);
