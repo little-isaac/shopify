@@ -20,8 +20,7 @@ class ShopifyObject {
     private $call_limit = 41;
     private $last_call_limit = 30;
     private $sleep_on_limit = 10; // in sec
-    
-    
+
     function __construct($shop_name, $token, $data = null) {
         $this->shop_name = $shop_name;
         $this->token = $token;
@@ -44,7 +43,7 @@ class ShopifyObject {
                 $data = array_merge($data, $str);
             }
             $class = get_class($this);
-            $res =  $this->call('GET', str_replace("{id}", $id, $this->SINGLE), $data);
+            $res = $this->call('GET', str_replace("{id}", $id, $this->SINGLE), $data);
             $this->data = $res;
             return $this;
         } catch (ShopifyApiException $ex) {
@@ -108,9 +107,14 @@ class ShopifyObject {
         return null;
     }
 
-    function delete() {
+    function delete($str = []) {
         try {
-            $this->call('DELETE', str_replace('{id}', $this->id, $this->SINGLE));
+            $data = [];
+
+            if (!empty($str) && count($str) > 0) {
+                $data = array_merge($data, $str);
+            }
+            $this->call('DELETE', str_replace('{id}', $this->id, $this->SINGLE), $data);
             $this->data = null;
             return $this;
         } catch (ShopifyApiException $ex) {
@@ -151,7 +155,7 @@ class ShopifyObject {
         }
         return null;
     }
-    
+
     function account_activation_url() {
         try {
             $data = [];
@@ -182,7 +186,7 @@ class ShopifyObject {
         }
         return null;
     }
-    
+
     public function __get($field) {
         if (property_exists($this, $field)) {
             return $this->$field;
@@ -227,18 +231,18 @@ class ShopifyObject {
         $response = $this->curlHttpApiRequest($method, $url, $query, $payload, $request_headers);
 
         $response = json_decode($response, true);
-        if(isset($this->last_response_headers['x-shopify-shop-api-call-limit']) && !empty($this->last_response_headers['x-shopify-shop-api-call-limit'])){
+        if (isset($this->last_response_headers['x-shopify-shop-api-call-limit']) && !empty($this->last_response_headers['x-shopify-shop-api-call-limit'])) {
             $calls = intVal(trim(str_replace("/40", "", $this->last_response_headers['x-shopify-shop-api-call-limit'])));
-            if($calls >= $this->last_call_limit){
+            if ($calls >= $this->last_call_limit) {
                 sleep($this->sleep_on_limit);
             }
         }
         if (isset($response['errors']) or ( $this->last_response_headers['http_status_code'] >= 400)) {
 //            echo "\n\n";
-            if($this->last_response_headers['http_status_code'] == 429){
+            if ($this->last_response_headers['http_status_code'] == 429) {
 //                dd($this->last_response_headers);
                 sleep($this->sleep_on_limit);
-               return $this->call($method, $path, $params);
+                return $this->call($method, $path, $params);
             }
             throw new ShopifyApiException($method, $path, $params, $this->last_response_headers, $response);
         }
@@ -308,21 +312,22 @@ class ShopifyObject {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         }
     }
-    
-    public function toArray($key=null){
-        if(!empty($key)){
-            return json_decode($this->toJson($key),true);
+
+    public function toArray($key = null) {
+        if (!empty($key)) {
+            return json_decode($this->toJson($key), true);
         }
-        return json_decode($this->toJson(),true);
+        return json_decode($this->toJson(), true);
     }
 
-    public function toJson($key=null){
-        if(!empty($key)){
-            if(gettype($this->$key) === "string"){
+    public function toJson($key = null) {
+        if (!empty($key)) {
+            if (gettype($this->$key) === "string") {
                 return $this->$key;
             }
             return json_encode($this->$key);
         }
         return json_encode($this->data);
     }
+
 }
