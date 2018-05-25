@@ -15,6 +15,7 @@ class ShopifyObject {
     private $token;
     private $api_key;
     private $secret;
+    private $response;
     public $data;
     private $error;
     private $call_limit = 41;
@@ -229,7 +230,7 @@ class ShopifyObject {
         $request_headers[] = 'X-Shopify-Access-Token: ' . $this->token;
 
         $response = $this->curlHttpApiRequest($method, $url, $query, $payload, $request_headers);
-
+        $this->response = $response;
         $response = json_decode($response, true);
         if (isset($this->last_response_headers['x-shopify-shop-api-call-limit']) && !empty($this->last_response_headers['x-shopify-shop-api-call-limit'])) {
             $calls = intVal(trim(str_replace("/40", "", $this->last_response_headers['x-shopify-shop-api-call-limit'])));
