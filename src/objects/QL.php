@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace App\Shopify;
+namespace Shopify\Objects;
 
 use Shopify\QLObject;
 
