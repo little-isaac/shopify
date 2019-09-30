@@ -22,11 +22,13 @@ class ShopifyObject {
     private $last_call_limit = 30;
     private $sleep_on_limit = 10; // in sec
 
-    function __construct($shop_name, $token, $data = null) {
+    function __construct($shop_name, $token, $data = null, $version = null) {
         $this->shop_name = $shop_name;
         $this->token = $token;
         $this->api_key = config("shopify_object.key");
         $this->secret = config("shopify_object.secret");
+        $config_version = (config('shopify_object.version') && !empty(config('shopify_object.version'))) ? config('shopify_object.version') : '2019-04';
+        $this->version = ($version == null) ? $config_version : $version;
         if ($data == null) {
             
         } else {
@@ -219,7 +221,9 @@ class ShopifyObject {
 
     public function call($method, $path, $params = array()) {
         $baseurl = "https://{$this->shop_name}/";
-
+        if (!empty($this->version) && $this->version != null) {
+            $path = str_replace('admin/', 'admin/api/' . $this->version . "/", $path);
+        }
         $url = $baseurl . ltrim($path, '/');
         $query = in_array($method, array('GET', 'DELETE')) ? $params : array();
         $payload = in_array($method, array('POST', 'PUT')) ? json_encode($params) : array();
