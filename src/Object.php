@@ -21,6 +21,7 @@ class ShopifyObject {
     private $call_limit = 41;
     private $last_call_limit = 30;
     private $sleep_on_limit = 10; // in sec
+    public $headers;
 
     function __construct($shop_name, $token, $data = null, $version = null) {
         $this->shop_name = $shop_name;
@@ -59,9 +60,10 @@ class ShopifyObject {
     function all($page = 1, $limit = 250, $str = []) {
         try {
             $data = [];
-            $data['page'] = $page;
+            if ($this->version == "2019-04") {
+                $data['page'] = $page;
+            }
             $data['limit'] = $limit;
-
             if (!empty($str) && count($str) > 0) {
                 $data = array_merge($data, $str);
             }
@@ -251,6 +253,7 @@ class ShopifyObject {
             }
             throw new ShopifyApiException($method, $path, $params, $this->last_response_headers, $response);
         }
+        $this->headers = $this->last_response_headers;
         return (is_array($response) and ( count($response) > 0)) ? array_shift($response) : $response;
     }
 
@@ -285,6 +288,7 @@ class ShopifyObject {
 
     private function curlParseHeaders($message_headers) {
         $header_lines = preg_split("/\r\n|\n|\r/", $message_headers);
+
         $header_response = explode(' ', trim(array_shift($header_lines)), 3);
 
 //        list(, $headers['http_status_code'], $headers['http_status_message']) = explode(' ', trim(array_shift($header_lines)), 3);
@@ -297,7 +301,7 @@ class ShopifyObject {
             $name = strtolower($name);
             $headers[$name] = trim($value);
         }
-
+        $this->headers = $headers;
         return $headers;
     }
 
