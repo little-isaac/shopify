@@ -140,7 +140,10 @@ class QLObject {
     private function curlParseHeaders($message_headers) {
         $header_lines = preg_split("/\r\n|\n|\r/", $message_headers);
         $headers = array();
-        list(, $headers['http_status_code'], $headers['http_status_message']) = explode(' ', trim(array_shift($header_lines)), 3);
+        //        list(, $headers['http_status_code'], $headers['http_status_message']) = explode(' ', trim(array_shift($header_lines)), 3);
+        $headers = array();
+        $headers['http_status_code'] = (isset($header_response[1])) ? $header_response[1] : null;
+        $headers['http_status_message'] = (isset($header_response[2])) ? $header_response[2] : null;
         foreach ($header_lines as $header_line) {
             list($name, $value) = explode(':', $header_line, 2);
             $name = strtolower($name);
