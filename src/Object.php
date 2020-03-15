@@ -23,13 +23,14 @@ class ShopifyObject {
     private $sleep_on_limit = 10; // in sec
     public $headers;
 
-    function __construct($shop_name, $token, $data = null, $version = null) {
+    function __construct($shop_name, $token, $data = null, $version = null, $headers = []) {
         $this->shop_name = $shop_name;
         $this->token = $token;
         $this->api_key = config("shopify_object.key");
         $this->secret = config("shopify_object.secret");
         $config_version = (config('shopify_object.version') && !empty(config('shopify_object.version'))) ? config('shopify_object.version') : '2019-04';
         $this->version = ($version == null) ? $config_version : $version;
+        $this->headers = $headers;
         if ($data == null) {
             
         } else {
@@ -62,6 +63,10 @@ class ShopifyObject {
             $data = [];
             if ($this->version == "2019-04") {
                 $data['page'] = $page;
+            } else {
+                if (!empty($page)) {
+                    $data['page_info'] = $page;
+                }
             }
             $data['limit'] = $limit;
             if (!empty($str) && count($str) > 0) {
@@ -71,7 +76,7 @@ class ShopifyObject {
             $result = [];
             foreach ($products as $product) {
                 $class = get_class($this);
-                $result[] = new $class($this->shop_name, $this->token, $product);
+                $result[] = new $class($this->shop_name, $this->token, $product, $this->version, $this->headers);
             }
             return $result;
         } catch (ShopifyApiException $ex) {
@@ -253,7 +258,6 @@ class ShopifyObject {
             }
             throw new ShopifyApiException($method, $path, $params, $this->last_response_headers, $response);
         }
-        $this->headers = $this->last_response_headers;
         return (is_array($response) and ( count($response) > 0)) ? array_shift($response) : $response;
     }
 
@@ -302,7 +306,46 @@ class ShopifyObject {
             $headers[$name] = trim($value);
         }
         $this->headers = $headers;
+        $this->setup_page_info();
         return $headers;
+    }
+
+    function setup_page_info() {
+        $links = (isset($this->headers['link'])) ? $this->headers['link'] : null;
+        $link_array = explode(',', $links);
+        $previous_str = "previous";
+        $next_str = "next";
+
+        foreach ($link_array as $link) {
+            
+            if (strpos($link, $previous_str)) {
+                $url = str_replace(['rel="' . $previous_str . '"', ';', '<', '>'], '', $link);
+                $parameters = explode('&', parse_url($url, 6));
+                $page_info = '';
+                foreach ($parameters as $parameter) {
+                    if (explode('=', $parameter)[0] == "page_info") {
+                        $page_info = explode('=', $parameter)[1];
+                        break;
+                    }
+                }
+                if (!empty($page_info)) {
+                    $this->headers['previous_page_info'] = trim($page_info);
+                }
+            } else if (strpos($link, $next_str)) {
+                $url = str_replace(['rel="' . $next_str . '"', ';', '<', '>'], '', $link);
+                $parameters = explode('&', parse_url($url, 6));
+                $page_info = '';
+                foreach ($parameters as $parameter) {
+                    if (explode('=', $parameter)[0] == "page_info") {
+                        $page_info = explode('=', $parameter)[1];
+                        break;
+                    }
+                }
+                if (!empty($page_info)) {
+                    $this->headers['next_page_info'] = trim($page_info);
+                }
+            }
+        }
     }
 
     private function curlSetopts($ch, $method, $payload, $request_headers) {
