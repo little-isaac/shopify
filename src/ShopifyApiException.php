@@ -22,8 +22,18 @@ class ShopifyApiException extends \Exception {
         $this->params = $params;
         $this->response_headers = $response_headers;
         $this->response = $response;
-        $error = (is_array($response['errors']) and ( count($response['errors']) > 0)) ? array_shift($response['errors']) : $response['errors'];
-        $error = (is_array($error) and ( count($error) > 0)) ? array_shift($error) : $error;
+        $error = "";
+        if(!$response){
+            $error = "No Response from API";
+        }else if ((is_array($response['errors']) && ( count($response['errors']) > 0))){
+           $error = array_shift($response['errors']);
+        }else{
+           $error =  $response['errors'];
+        }
+        
+        if((is_array($error) && ( count($error) > 0))){
+            $error = array_shift($error);
+        }
         parent::__construct($error, $response_headers['http_status_code']);
     }
 
