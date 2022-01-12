@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Shopify;
 
 class ShopifyObject {
@@ -28,7 +22,7 @@ class ShopifyObject {
         $this->token = $token;
         $this->api_key = config("shopify_object.key");
         $this->secret = config("shopify_object.secret");
-        $config_version = (config('shopify_object.version') && !empty(config('shopify_object.version'))) ? config('shopify_object.version') : '2019-04';
+        $config_version = (config('shopify_object.version') && !empty(config('shopify_object.version'))) ? config('shopify_object.version') : '2022-01';
         $this->version = ($version == null) ? $config_version : $version;
         $this->headers = $headers;
         if ($data == null) {

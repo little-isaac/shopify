@@ -13,7 +13,7 @@ class ShopifyObjectServiceProvider extends ServiceProvider {
      */
     public function boot() {
         $this->publishes([
-            __DIR__ . '/../config/shopify_object.php' => config_path('shopify_object.php'),
+            __DIR__ . '/../Config/shopify_object.php' => config_path('shopify_object.php'),
         ],'config');
     }
 
