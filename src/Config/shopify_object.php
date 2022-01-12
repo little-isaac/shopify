@@ -15,5 +15,5 @@ return [
     'secret' => env("SHOPIFY_SECRET", null),
     'return_url' => env("SHOPIFY_RETURN_URL", null),
     'callback_url' => env("SHOPIFY_CALLBACK_URL", null),
-    'version' => env("SHOPIFY_API_VERSION", '2019-04'),
+    'version' => env("SHOPIFY_API_VERSION", '2022-01'),
 ];
