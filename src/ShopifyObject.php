@@ -16,6 +16,7 @@ class ShopifyObject {
     private $last_call_limit = 30;
     private $sleep_on_limit = 10; // in sec
     public $headers;
+    public $version;
 
     function __construct($shop_name, $token, $data = null, $version = null, $headers = []) {
         $this->shop_name = $shop_name;

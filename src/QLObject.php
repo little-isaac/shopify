@@ -21,6 +21,7 @@ class QLObject {
     private $call_limit = 41;
     private $last_call_limit = 30;
     private $sleep_on_limit = 10; // in sec
+    public $version;
 
     function __construct($shop_name, $token, $data = null, $version = null, $headers = []) {
         $this->shop_name = $shop_name;
@@ -199,5 +200,4 @@ class QLObject {
         }
         return json_encode($this->data);
     }
-
 }
