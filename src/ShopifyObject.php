@@ -223,7 +223,7 @@ class ShopifyObject {
 
     public function call($method, $path, $params = array()) {
         $baseurl = "https://{$this->shop_name}/";
-        if (!empty($this->version) && $this->version != null && $path !== "/admin/oauth/access_token") {
+        if (!empty($this->version) && $this->version != null && in_array($path,["/admin/oauth/access_token","/admin/oauth/access_scopes"])) {
             $path = str_replace('admin/', 'admin/api/' . $this->version . "/", $path);
         }
         $url = $baseurl . ltrim($path, '/');
@@ -306,13 +306,12 @@ class ShopifyObject {
     }
 
     function setup_page_info() {
-        $links = (isset($this->headers['link'])) ? $this->headers['link'] : null;
+        $links = (isset($this->headers['link'])) ? $this->headers['link'] : "";
         $link_array = explode(',', $links);
         $previous_str = "previous";
         $next_str = "next";
 
         foreach ($link_array as $link) {
-            
             if (strpos($link, $previous_str)) {
                 $url = str_replace(['rel="' . $previous_str . '"', ';', '<', '>'], '', $link);
                 $parameters = explode('&', parse_url($url, 6));
