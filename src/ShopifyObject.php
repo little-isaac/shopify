@@ -223,7 +223,7 @@ class ShopifyObject {
 
     public function call($method, $path, $params = array()) {
         $baseurl = "https://{$this->shop_name}/";
-        if (!empty($this->version) && $this->version != null && !in_array($path,["/admin/oauth/access_token","/admin/oauth/access_scopes"])) {
+        if (!empty($this->version) && $this->version != null && !in_array($path,["/admin/oauth/access_token","/admin/oauth/access_scopes.json"])) {
             $path = str_replace('admin/', 'admin/api/' . $this->version . "/", $path);
         }
         $url = $baseurl . ltrim($path, '/');
