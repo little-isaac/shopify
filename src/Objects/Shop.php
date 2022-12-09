@@ -21,6 +21,11 @@ class Shop extends ShopifyObject {
         return $url;
     }
     
+    public function redirectWithHost($API, $SCOPES, $REDIRECT_URI, $HOST){
+        $url = "https://".$HOST."/oauth/authorize?client_id=".$API."&scope=".$SCOPES."&redirect_uri=".$REDIRECT_URI;
+        return $url;
+    }
+    
     public function get_access_token($API_KEY,$SCERET_KEY,$CODE){
         $path = "/admin/oauth/access_token";
         $params = [
